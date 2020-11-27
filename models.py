@@ -135,6 +135,8 @@ def get_model_type(model):
         return "resnet"
     elif len(model.layers) > 200 and model.layers[260] == 'block35_10_ac':
         return "inception_resnet"
+    elif "mobilenetv2" in model.name:
+        return "mobilenetv2"
     else:
         return "unet"
 

@@ -1,6 +1,8 @@
 import numpy as np
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
-from tensorflow.keras.applications.resnet50 import preprocess_input
+from tensorflow.keras.applications.resnet50 import preprocess_input as resnet_preprocess
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mobilenet_preprocess
+from tensorflow.keras.preprocessing.image import random_channel_shift, random_brightness
 
 
 def is_lowcontrast(image, threshold=25):
@@ -72,12 +74,15 @@ def get_shape(image_path):
 
 def preprocess_image(image, model_type="resnet"):
     if model_type == "resnet":
-        return preprocess_input(image)
+        return resnet_preprocess(image)
     elif model_type == "inception_resnet":
         raise NotImplemented("Have not implemented preprocessing for inception-resnet yet")
-    else:
+    elif model_type == "unet":
         return image / 255.0
-
+    elif model_type == "mobilenetv2":
+        return mobilenet_preprocess(image)
+    else:
+        raise NotImplemented(f"Have not implemented preprocessing for {model_type}")
 
 def augment_image(image, mask):
     import random
@@ -90,6 +95,12 @@ def augment_image(image, mask):
     if rot > 0:
         image = np.rot90(image, rot)
         mask = np.rot90(mask, rot)
+
+    if np.random.random() < 0.125:
+        image = random_brightness(image, (0.8, 1.2))
+
+    if np.random.random() < 0.125:
+        image = random_channel_shift(image, 25.0, channel_axis=3)
 
     return image, mask
 

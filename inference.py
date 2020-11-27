@@ -13,8 +13,8 @@ from tensorflow.keras.models import load_model
 parser = argparse.ArgumentParser(description="Infer segmentation and write out to submission",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument("model_dir", help="directory where model is located, after running training", required=True)
-parser.add_argument("output_csv", help="Output csv file", required=True)
+parser.add_argument("model_dir", help="directory where model is located, after running training")
+parser.add_argument("output_csv", help="Output csv file")
 parser.add_argument("-s", "--submission", help="Submission template file",
                     default="sample_submission.csv")
 parser.add_argument("-t", "--test_dir", help="Directory where the test tiff files are located",
@@ -28,7 +28,7 @@ df_submission = pd.read_csv(cmd_args.submission)
 image_ids = df_submission['id'].values.tolist()
 image_paths = [os.path.join(cmd_args.test_dir, f"{x}.tiff") for x in df_submission['id'].values]
 
-if not os.path.exists(os.path.join(cmd_args.model_dir), 'config.json'):
+if not os.path.exists(os.path.join(cmd_args.model_dir, 'config.json')):
     raise FileNotFoundError(f"Error - unable to find config.json in {cmd_args.model_dir}")
 
 with open(os.path.join(cmd_args.model_dir, 'config.json'), 'r') as file:
@@ -99,7 +99,7 @@ for image_id, image_path in zip(image_ids, image_paths):
     mask_image = np.where(mask_image > 0.5, 1, 0).astype(np.uint8)
 
     if cmd_args.masks_dir and os.path.exists(cmd_args.masks_dir) and os.path.isdir(cmd_args.masks_dir):
-        skimage.io.imsave(os.path.join(cmd_args.masks_dir, f"{image_id}.png"))
+        skimage.io.imsave(os.path.join(cmd_args.masks_dir, f"{image_id}.png"), mask_image)
 
     rle_runs.append(mask2rle(mask_image))
 

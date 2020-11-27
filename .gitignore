@@ -1,0 +1,5 @@
+train_images/
+train_masks/
+*.zip
+__pycache__/
+model*/
