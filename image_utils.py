@@ -76,13 +76,13 @@ def preprocess_image(image, model_type="resnet"):
     if model_type == "resnet":
         return resnet_preprocess(image)
     elif model_type == "inception_resnet":
-        raise NotImplemented("Have not implemented preprocessing for inception-resnet yet")
+        raise NotImplementedError("Have not implemented preprocessing for inception-resnet yet")
     elif model_type == "unet":
         return image / 255.0
     elif model_type == "mobilenetv2":
         return mobilenet_preprocess(image)
     else:
-        raise NotImplemented(f"Have not implemented preprocessing for {model_type}")
+        raise NotImplementedError(f"Have not implemented preprocessing for {model_type}")
 
 def augment_image(image, mask):
     import random
