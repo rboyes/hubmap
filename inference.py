@@ -75,17 +75,14 @@ for image_id, image_path in zip(image_ids, image_paths):
 
         end = start[0] + n0, start[1] + n1
 
-        # Extract a patch image
         patch_image = image[start[0]:end[0], start[1]:end[1], :]
-
-        patch_image = preprocess_image(patch_image, model_type)
 
         downsampled_patch = resize(patch_image, (r0, r1), anti_aliasing=config['image_antialiasing'],
                                    order=3, preserve_range=True)
 
-        downsampled_mask = model.predict(downsampled_patch[np.newaxis, :], batch_size=1)
-
-        downsampled_mask = np.squeeze(downsampled_mask)
+        downsampled_patch = preprocess_image(downsampled_patch, model_type)
+        
+        downsampled_mask = np.squeeze(model.predict(downsampled_patch[np.newaxis, :], batch_size=1))
 
         # Upsample the predicted mask to match the original patch
         patch_mask = resize(downsampled_mask, (n0, n1), anti_aliasing=False, order=3, preserve_range=True)
