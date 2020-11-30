@@ -96,12 +96,6 @@ def augment_image(image, mask):
         image = np.rot90(image, rot)
         mask = np.rot90(mask, rot)
 
-    if np.random.random() < 0.125:
-        image = random_brightness(image, (0.8, 1.2))
-
-    if np.random.random() < 0.125:
-        image = random_channel_shift(image, 25.0, channel_axis=3)
-
     return image, mask
 
 def basic_generator(image_paths, mask_paths, batch_size=16, imagenet_preprocess="resnet"):
