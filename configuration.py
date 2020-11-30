@@ -7,5 +7,6 @@ config = {
     'model_size': [256, 256],
     'step_size': 768,
     'image_antialiasing': True,
-    'test_size': 0.125
+    'test_size': 0.125,
+    'num_splits': 5
 }
